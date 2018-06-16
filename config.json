@@ -1,5 +1,10 @@
 {
     "repos": [
-        
+        {
+            "user": "cmhull42",
+            "name": "pushhooktest",
+            "branch": "master",
+            "contentdirectory": "%HOMEPATH%\\pushhooktest"
+        }
     ]
 }
