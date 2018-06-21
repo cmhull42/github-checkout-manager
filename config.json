@@ -4,7 +4,9 @@
             "user": "cmhull42",
             "name": "pushhooktest",
             "branch": "master",
-            "contentdirectory": "%HOMEPATH%\\pushhooktest"
+            "repodirectory": "~/pushhooktest",
+            "contentdirectory": "~/deploy/pushhooktest",
+            "deploykeypath": "~/.ssh/pushhooktest_id_rsa"
         }
     ]
 }
