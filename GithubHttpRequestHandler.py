@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler
+from DeploymentManager import DeploymentManager
 import json
 
 class GithubHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -11,6 +12,11 @@ class GithubHTTPRequestHandler(BaseHTTPRequestHandler):
 
         try:
             content = json.loads(response.decode("utf-8"))
+
+            manager = DeploymentManager()
+
+            manager.receivepush(content)
+
         except json.decoder.JSONDecodeError:
             print("Error: Received malformed response from client")
             self.send_response(400)

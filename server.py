@@ -2,7 +2,7 @@ from http.server import HTTPServer
 from GithubHttpRequestHandler import GithubHTTPRequestHandler
 
 def main():
-    server_address = ('127.0.0.1', 9800)
+    server_address = ('0.0.0.0', 9800)
     httpd = HTTPServer(server_address, GithubHTTPRequestHandler)
     httpd.serve_forever()
 
