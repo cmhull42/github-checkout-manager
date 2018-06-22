@@ -13,7 +13,11 @@ Config file
 Put as many repos as you would like in the json config file. Each repo needs the following information:
 
 user - The github username the repo belongs to i.e. (cmhull42)
+
 name - The official name of the repository i.e. (github-checkout-manager)
+
 branch - The branch you would like to track updates to - currently only supports master
+
 configdirectory - this directory should contain a cloned copy of the repo (with the same name) and optionally a private key id_rsa to authenticate to github with.
+
 contentdirectory - the directory to deploy the code to i.e. (/var/www/connoor.io)
