@@ -20,15 +20,19 @@ class DeploymentManager:
             print("Received a push for a repo with no configuration! (" + pushedrepo + "). Check that you have a definition for this repo in your config.")
             return
 
-        repodirectory = os.path.join(os.path.expanduser(foundrepo["configdirectory"]), foundrepo["name"])
+        configdirectory = os.path.expanduser(foundrepo["configdirectory"])
+        repodirectory = os.path.join(configdirectory, foundrepo["name"])
         scriptdirectory = os.path.dirname(os.path.realpath(__file__))
 
         myenv = os.environ.copy()
+        myenv["GIT_SSH"] = os.path.join(scriptdirectory, "ssh-wrapper.sh")
 
-        deploykey = foundrepo.get("deploykeypath", "")
-        if deploykey:
-            myenv["GIT_SSH"] = scriptdirectory + os.pathsep + "ssh-wrapper.sh"
-        
+        deploykey = os.path.join(configdirectory, "id_rsa")
+
+        if os.path.isfile(deploykey):
+            print ("Found key: " + deploykey)
+            myenv["GIT_SSH_COMMAND"] = "ssh -i " + os.path.expanduser(deploykey)
+
         subprocess.run("git reset --hard origin/master".split(), cwd=repodirectory, env=myenv)
         subprocess.run("git pull origin master".split(), cwd=repodirectory, env=myenv)
 
