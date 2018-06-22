@@ -1,5 +1,5 @@
-import subprocess, os, json
-from distutils.dir_util import copy_tree
+import subprocess, os, json, distutils
+import distutils.dir_util
 
 class DeploymentManager:
     def __init__(self):
@@ -20,15 +20,21 @@ class DeploymentManager:
             print("Received a push for a repo with no configuration! (" + pushedrepo + "). Check that you have a definition for this repo in your config.")
             return
 
-        repodirectory = os.path.expanduser(foundrepo["repodirectory"])
+        repodirectory = os.path.join(os.path.expanduser(foundrepo["configdirectory"]), foundrepo["name"])
+        scriptdirectory = os.path.dirname(os.path.realpath(__file__))
 
         myenv = os.environ.copy()
 
         deploykey = foundrepo.get("deploykeypath", "")
         if deploykey:
-            myenv["GIT_SSH_COMMAND"] = "ssh -i " + deploykey
+            myenv["GIT_SSH"] = scriptdirectory + os.pathsep + "ssh-wrapper.sh"
         
         subprocess.run("git reset --hard origin/master".split(), cwd=repodirectory, env=myenv)
         subprocess.run("git pull origin master".split(), cwd=repodirectory, env=myenv)
 
-        copy_tree(repodirectory, os.path.expanduser(foundrepo["contentdirectory"]))
+        # copy_tree caches directory structures it's created so if the folder has been deleted
+        # since the last call, it will fail. weird bug.
+        # so next line clears the cache
+        distutils.dir_util._path_created = {}
+
+        distutils.dir_util.copy_tree(repodirectory, os.path.expanduser(foundrepo["contentdirectory"]))
