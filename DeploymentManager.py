@@ -4,7 +4,8 @@ import distutils.dir_util
 class DeploymentManager:
     def __init__(self):
         # yeah this is not a very good solution. can't find a good way to structure the dependencies
-        with open("config.json", "r") as f:
+        scriptdirectory = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(scriptdirectory, "config.json"), "r") as f:
             self.repoconfig = json.loads(f.read())
 
     def receivepush(self, pushdata):
@@ -31,7 +32,7 @@ class DeploymentManager:
 
         if os.path.isfile(deploykey):
             print ("Found key: " + deploykey)
-            myenv["GIT_SSH_COMMAND"] = "ssh -i " + os.path.expanduser(deploykey)
+            myenv["GIT_SSH_COMMAND"] = "ssh -o StrictHostKeyChecking=no -i " + os.path.expanduser(deploykey)
 
         subprocess.run("git reset --hard origin/master".split(), cwd=repodirectory, env=myenv)
         subprocess.run("git pull origin master".split(), cwd=repodirectory, env=myenv)

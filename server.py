@@ -1,3 +1,4 @@
+#!/usr/bin/python3 -u
 from http.server import HTTPServer
 from GithubHttpRequestHandler import GithubHTTPRequestHandler
 
