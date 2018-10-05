@@ -1,4 +1,4 @@
-import subprocess, os, json, distutils
+import subprocess, os, json, distutils, shutil
 import distutils.dir_util
 
 class DeploymentManager:
@@ -20,9 +20,15 @@ class DeploymentManager:
             # no repo with that name configured
             print("Received a push for a repo with no configuration! (" + pushedrepo + "). Check that you have a definition for this repo in your config.")
             return
+        
+        if foundrepo.get("type", "") == "go":
+            self.do_go_update(foundrepo)
+        else:
+            self.do_raw_copy(foundrepo)
 
-        configdirectory = os.path.expanduser(foundrepo["configdirectory"])
-        repodirectory = os.path.join(configdirectory, foundrepo["name"])
+    def do_raw_copy(self, repo):
+        configdirectory = os.path.expanduser(repo["configdirectory"])
+        repodirectory = os.path.join(configdirectory, repo["name"])
         scriptdirectory = os.path.dirname(os.path.realpath(__file__))
 
         myenv = os.environ.copy()
@@ -42,4 +48,16 @@ class DeploymentManager:
         # so next line clears the cache
         distutils.dir_util._path_created = {}
 
-        distutils.dir_util.copy_tree(repodirectory, os.path.expanduser(foundrepo["contentdirectory"]))
+        distutils.dir_util.copy_tree(repodirectory, repo["contentdirectory"])
+
+    def do_go_update(self, repo):
+        contentdirectory = repo["contentdirectory"]
+
+        subprocess.run(("go get -u github.com/"+repo["user"]+"/"+repo["name"]).split())
+
+        sourcepath = os.path.expandvars("$GOPATH")
+        sourcepath = os.path.join(sourcepath, "bin", repo["name"])
+        destpath = os.path.join(contentdirectory, repo["name"])
+
+        shutil.copyfile(sourcepath, destpath+".new")
+        os.replace(destpath+".new", destpath)

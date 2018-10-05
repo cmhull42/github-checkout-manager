@@ -4,8 +4,8 @@
             "user": "cmhull42",
             "name": "pushhooktest",
             "branch": "master",
-            "configdirectory": "~/pushhooktest",
-            "contentdirectory": "~/deploy/pushhooktest"
+            "configdirectory": "/opt/pushhooktest",
+            "contentdirectory": "/opt/deploypushhook"
         }
     ]
 }
