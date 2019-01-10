@@ -90,10 +90,7 @@ def smart_copytree(src, dst, symlinks=False, ignore=None):
     try:
         shutil.copystat(src, dst)
     except OSError as why:
-        if WindowsError is not None and isinstance(why, WindowsError):
-            # Copying file access times may fail on Windows
-            pass
-        else:
+        if why.winerror is None:
             errors.extend((src, dst, str(why)))
     if errors:
         raise shutil.Error(errors)
