@@ -8,6 +8,9 @@ Useful for websites, so that you can update the live site by pushing to a branch
 
 Grab the source and stick it in a directory of your choosing on your webserver. Permissions will be easiest to manage and most secure if you create a new user for github-checkout-manager.
 
+Add the repo you would like to deploy to the config file, and make sure permissions are set correctly.
+Add the url GCM is listening on in settings > Webhooks on github. Make sure to select json, not form-urlencoded
+
 # Config file ###
 
 Put as many repos as you would like in the json config file. Each repo needs the following information:
