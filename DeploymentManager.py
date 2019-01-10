@@ -80,7 +80,7 @@ def smart_copytree(src, dst, symlinks=False, ignore=None):
                 smart_copytree(srcname, dstname, symlinks, ignore)
             else:
                 # Will raise a SpecialFileError for unsupported file types
-                shutil.copy2(srcname, dstname)
+                shutil.copy(srcname, dstname)
         # catch the Error from the recursive copytree so that we can
         # continue with other files
         except shutil.Error as err:
