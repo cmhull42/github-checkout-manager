@@ -87,10 +87,5 @@ def smart_copytree(src, dst, symlinks=False, ignore=None):
             errors.extend(err.args[0])
         except EnvironmentError as why:
             errors.append((srcname, dstname, str(why)))
-    try:
-        shutil.copystat(src, dst)
-    except OSError as why:
-        if getattr(why, 'winerror', None) is None:
-            errors.extend((src, dst, str(why)))
     if errors:
         raise shutil.Error(errors)
